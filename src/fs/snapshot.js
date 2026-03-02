@@ -49,7 +49,7 @@ const snapshot = async () => {
       "utf-8",
     );
   } catch (error) {
-    throw new Error("Fs operation failed");
+    throw new Error("FS operation failed");
   }
 };
 
