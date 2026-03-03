@@ -41,7 +41,7 @@ const snapshot = async () => {
 
   try {
     await writeFile(join(__dirname, "snapshot.json"), JSON.stringify(snapshot, null, 2));
-    console.log(`Snapshot created successfully`);
+    console.log(`Snapshot has been created successfully`);
   } catch (error) {
     throw new Error("Failed to create snapshot");
   }
