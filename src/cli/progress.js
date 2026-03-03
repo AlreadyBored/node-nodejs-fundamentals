@@ -1,5 +1,3 @@
-import { styleText } from "node:util";
-
 const progress = () => {
   const args = process.argv.slice(2);
 
@@ -8,39 +6,10 @@ const progress = () => {
     return index !== -1 && args[index + 1] ? args[index + 1] : null;
   };
 
-  const duration = Number(getArgValue("--duration")) || 5000;
-  const intervalTime = Number(getArgValue("--interval")) || 100;
-  const barLength = Number(getArgValue("--length")) || 30;
+  const duration = parseInt(getArgValue("--duration")) || 5000;
+  const intervalTime = parseInt(getArgValue("--interval")) || 100;
+  const barLength = parseInt(getArgValue("--length")) || 30;
   const colorHex = getArgValue("--color");
-
-  const hexToColor = (hex) => {
-    const ansiColors = {
-      black: [0, 0, 0],
-      red: [255, 0, 0],
-      green: [0, 255, 0],
-      yellow: [255, 255, 0],
-      blue: [0, 0, 255],
-      magenta: [255, 0, 255],
-      cyan: [0, 255, 255],
-      white: [255, 255, 255],
-      gray: [128, 128, 128],
-    };
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    let closestColor = null;
-    let smallestDistance = Infinity;
-    for (const [name, [cr, cg, cb]] of Object.entries(ansiColors)) {
-      const distance = (r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2;
-      if (distance < smallestDistance) {
-        smallestDistance = distance;
-        closestColor = name;
-      }
-    }
-    return closestColor;
-  };
-
-  const colorName = hexToColor(colorHex);
 
   const totalSteps = Math.ceil(duration / intervalTime);
   const increment = 100 / totalSteps;
@@ -48,28 +17,30 @@ const progress = () => {
   let currentPercent = 0;
   let currentStep = 0;
 
+  const isValidHex = (hex) => /^#([0-9A-Fa-f]{6})$/.test(hex);
+
+  const hexToRgb = (hex) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
+  };
+
   const interval = setInterval(() => {
     currentStep++;
     currentPercent = Math.min(100, Math.round(currentStep * increment));
 
     const filledLength = Math.round((currentPercent / 100) * barLength);
-    const emptyLength = barLength - filledLength;
 
-    let filled = "\u2588".repeat(filledLength);
-    const empty = " ".repeat(emptyLength);
+    let filledBar = "\u2588".repeat(filledLength);
+    const emptyBar = " ".repeat(barLength - filledLength);
 
-    if (colorName) {
-      try {
-        filled = styleText(colorName, filled);
-      } catch {
-        // invalid style name - ignored
-      }
+    if (colorHex && isValidHex(colorHex)) {
+      const { r, g, b } = hexToRgb(colorHex);
+      filledBar = `\x1b[38;2;${r};${g};${b}m${filledBar}\x1b[0m`;
     }
 
-    const line = `[${filled}${empty}] ${currentPercent}%`;
-
-    process.stdout.write("\r\x1b[2K");
-    process.stdout.write(line);
+    process.stdout.write(`\r[${filledBar}${emptyBar}] ${currentPercent}%`);
 
     if (currentPercent >= 100) {
       clearInterval(interval);
