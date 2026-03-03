@@ -33,7 +33,7 @@ const interactive = () => {
         rl.close();
         return;
       default:
-        console.log(`Unknown command: ${command}`);
+        console.log("Unknown command");
     }
     rl.prompt();
   }).on("close", () => {
