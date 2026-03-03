@@ -1,4 +1,4 @@
-import { writeFile, readdir, stat, readFile } from "node:fs/promises";
+import { writeFile, readdir, stat, readFile, access } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -7,7 +7,12 @@ const __dirname = path.dirname(__filename);
 const workspaceDir = path.resolve(__dirname, "../../workspace");
 
 async function scanDir(absDir, relativeDir = "") {
-  const entries = await readdir(absDir, { withFileTypes: true });
+  let entries;
+  try {
+    entries = await readdir(absDir, { withFileTypes: true });
+  } catch {
+    throw new Error("FS operation failed");
+  }
 
   const contentEntries = [];
 
@@ -41,6 +46,12 @@ async function scanDir(absDir, relativeDir = "") {
 }
 
 const snapshot = async () => {
+  try {
+    await access(workspaceDir);
+  } catch {
+    throw new Error("FS operation failed");
+  }
+
   const entries = await scanDir(workspaceDir);
   const content = {
     rootPath: workspaceDir,
