@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const workspaceDir = path.resolve(__dirname, "../../workspace");
+
+const workspaceDir = path.resolve(__dirname, "workspace"); //workspace folder should be inside src/fs
+const snapshotPath = path.resolve(__dirname, "snapshot.json");
 
 async function scanDir(absDir, relativeDir = "") {
   let entries;
@@ -58,11 +60,8 @@ const snapshot = async () => {
     entries,
   };
   try {
-    await writeFile(
-      "./snapshot.json",
-      JSON.stringify(content, null, 2),
-      "utf8",
-    );
+    await writeFile(snapshotPath, JSON.stringify(content, null, 2), "utf8");
+    console.log("Snapshot is successfully created");
   } catch (e) {
     console.error(e);
   }
