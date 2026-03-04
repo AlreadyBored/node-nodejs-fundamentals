@@ -1,60 +1,22 @@
-import { writeFile, readdir, stat, readFile, access } from "node:fs/promises";
+import { writeFile, access } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const workspaceDir = path.resolve(__dirname, "workspace"); //workspace folder should be inside src/fs
-const snapshotPath = path.resolve(__dirname, "snapshot.json");
-
-async function scanDir(absDir, relativeDir = "") {
-  let entries;
-  try {
-    entries = await readdir(absDir, { withFileTypes: true });
-  } catch {
-    throw new Error("FS operation failed");
-  }
-
-  const contentEntries = [];
-
-  for (const entry of entries) {
-    const absPath = path.resolve(absDir, entry.name);
-    const relativePath = relativeDir
-      ? path.join(relativeDir, entry.name)
-      : entry.name;
-
-    if (entry.isDirectory()) {
-      contentEntries.push({
-        path: relativePath,
-        type: "directory",
-      });
-
-      const nested = await scanDir(absPath, relativePath);
-      contentEntries.push(...nested);
-    } else if (entry.isFile()) {
-      const fileStat = await stat(absPath);
-      const buffer = await readFile(absPath);
-
-      contentEntries.push({
-        path: relativePath,
-        type: "file",
-        size: fileStat.size,
-        content: buffer.toString("base64"),
-      });
-    }
-  }
-  return contentEntries;
-}
+import { scanDirectory } from "./scanDirectory.js";
 
 const snapshot = async () => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
+  const workspaceDir = path.resolve(__dirname, "workspace"); //workspace folder should be inside src/fs
+  const snapshotPath = path.resolve(__dirname, "snapshot.json");
+
   try {
     await access(workspaceDir);
   } catch {
     throw new Error("FS operation failed");
   }
 
-  const entries = await scanDir(workspaceDir);
+  const entries = await scanDirectory(workspaceDir);
   const content = {
     rootPath: workspaceDir,
     entries,

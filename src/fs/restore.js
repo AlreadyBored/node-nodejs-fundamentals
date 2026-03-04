@@ -2,11 +2,6 @@ import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const snapshotPath = path.resolve(__dirname, "snapshot.json");
-const restoreDir = path.resolve(__dirname, "workspace_restored");
-
 async function createEntries(entries, baseDir) {
   for (const entry of entries) {
     const targetPath = path.join(baseDir, entry.path);
@@ -26,28 +21,26 @@ async function createEntries(entries, baseDir) {
 }
 
 async function restore() {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const snapshotPath = path.resolve(__dirname, "snapshot.json");
+  const restoreDir = path.resolve(__dirname, "workspace_restored");
+
   try {
     await access(snapshotPath);
   } catch {
     throw new Error("FS operation failed");
   }
 
-  let snapshotData;
   try {
     const raw = await readFile(snapshotPath, "utf8");
-    snapshotData = JSON.parse(raw);
-  } catch {
-    throw new Error("FS operation failed");
-  }
-
-  try {
+    const snapshotData = JSON.parse(raw);
     await mkdir(restoreDir);
+    await createEntries(snapshotData.entries, restoreDir);
+    console.log("Operation done. Workspace folder is successfully restored");
   } catch {
     throw new Error("FS operation failed");
   }
-
-  await createEntries(snapshotData.entries, restoreDir);
-  console.log("Operation done. Workspace folder is successfully restored");
 }
 
 await restore();
