@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
-async function scanDirectory(currentPath, relativePath = "", entries = []) {
+const scanDirectory = async (currentPath, relativePath = "", entries = []) => {
   const items = await fs.readdir(currentPath);
 
   for (const item of items) {
@@ -33,7 +33,7 @@ async function scanDirectory(currentPath, relativePath = "", entries = []) {
   }
 
   return entries;
-}
+};
 
 const snapshot = async () => {
   let rowWorkspacePath = process.argv[2]?.replace(/^"|"$/g, "");
@@ -53,7 +53,6 @@ const snapshot = async () => {
     }
 
     const entries = await scanDirectory(workspacePath, "");
-    console.log("entries ==> ", entries);
 
     const snapshotData = {
       rootPath: workspacePath,
