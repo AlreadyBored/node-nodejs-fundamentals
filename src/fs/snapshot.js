@@ -1,26 +1,13 @@
 import fsPromises from "node:fs/promises";
 import path from "path";
-import { getFileContent, isFolderExists, encryptContent } from "../lib/utils.js";
+import {
+  getFileContent,
+  isFolderExists,
+  encryptContent,
+  drillDownFolder as drillDownFolderExt,
+} from "../lib/utils.js";
 
 const TARGET_FOLDER = "workspace";
-
-const getFileMetadata = async (filePath) => {
-  try {
-    const stats = await fsPromises.stat(filePath);
-    return stats;
-  } catch (err) {
-    throw new Error("FS operation failed");
-  }
-};
-
-const getFolderContent = async (folderPath) => {
-  try {
-    const content = await fsPromises.readdir(folderPath);
-    return content;
-  } catch (err) {
-    throw new Error("FS operation failed");
-  }
-};
 
 const writeSnapshot = async (snapshot) => {
   try {
@@ -33,7 +20,6 @@ const writeSnapshot = async (snapshot) => {
   }
 };
 
-// console.log(import.meta.dirname);
 const snapshot = async () => {
   // Write your code here
   // Recursively scan workspace directory
@@ -43,46 +29,36 @@ const snapshot = async () => {
 
   const rootPath = path.resolve(TARGET_FOLDER);
 
-  await isFolderExists(rootPath);
+  const isFolder =await isFolderExists(rootPath);
+
+  if (!isFolder) {
+    throw new Error("FS operation failed");
+  }
 
   const context = { rootPath, entries: [] };
+  const startPath = path.resolve("workspace");
 
-  await drillDownFolder([], context);
+  await drillDownFolderExt(startPath, {
+    runOnFile: async ({ pathTo, metadata, other }) => {
+      const contentRaw = await getFileContent(pathTo);
+
+      other.entries.push({
+        path: path.relative(other.rootPath, pathTo),
+        size: metadata.size,
+        type: "file",
+        content: encryptContent(contentRaw),
+      });
+    },
+    runOnFolder: ({ pathTo, other }) => {
+      other.entries.push({
+        path: path.relative(other.rootPath, pathTo),
+        type: "directory",
+      });
+    },
+    other: context,
+  });
 
   await writeSnapshot(context);
-};
-
-const drillDownFolder = async (folderPath, context) => {
-  const absolutePath = path.join(context.rootPath, ...folderPath);
-  const content = await getFolderContent(absolutePath);
-
-  await Promise.all(
-    content.map(async (item) => {
-      const itemPath = path.join(absolutePath, item);
-      const metadata = await getFileMetadata(itemPath);
-      const pathTo = `${folderPath.length > 0 ? folderPath.join("/") + "/" : ""}${item}`;
-
-      if (metadata.isDirectory()) {
-        context.entries.push({
-          path: pathTo,
-          type: "directory",
-        });
-        await drillDownFolder([...folderPath, item], context);
-      } else if (metadata.isFile()) {
-        const contentRaw = await getFileContent(itemPath);
-
-        context.entries.push({
-          path: pathTo,
-          size: metadata.size,
-          type: "file",
-          content: encryptContent(contentRaw),
-        });
-      } else {
-        // context.entries.push({ path: pathTo, type: "other" }); - ?
-        throw new Error("FS operation failed");
-      }
-    }),
-  );
 };
 
 await snapshot();
