@@ -1,8 +1,45 @@
+import { createInterface } from "node:readline/promises";
+
 const interactive = () => {
-  // Write your code here
-  // Use readline module for interactive CLI
-  // Support commands: uptime, cwd, date, exit
-  // Handle Ctrl+C and unknown commands
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.prompt();
+
+  rl.on("line", (line) => {
+    switch (line.trim()) {
+      case "uptime":
+        console.log(`uptime: ${process.uptime().toFixed(2)}s`);
+        rl.prompt();
+        break;
+
+      case "cwd":
+        console.log(process.cwd());
+        rl.prompt();
+        break;
+
+      case "date":
+        console.log(new Date().toISOString());
+        rl.prompt();
+        break;
+
+      case "exit":
+        rl.close();
+        break;
+
+      default:
+        console.log("Unknown command");
+        rl.prompt();
+        break;
+    }
+
+  });
+
+  rl.on("close", () => {
+    console.log("Goodbye!");
+  });
 };
 
 interactive();
