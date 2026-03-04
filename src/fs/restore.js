@@ -4,9 +4,7 @@ import path from "path";
 const restore = async () => {
   const restoredFolder = "./workspace_restored";
   await fs.rm(restoredFolder, { recursive: true, force: true });
-  fs.mkdir(restoredFolder, (err) =>
-    console.error("Error on creating workspace_restored folder", err),
-  );
+  fs.mkdir(restoredFolder, { recursive: true });
   const fileContent = await fs.readFile("./snapshot.json", "utf-8");
   const pathObj = JSON.parse(fileContent);
   for (const entry of pathObj.entries) {
@@ -17,7 +15,7 @@ const restore = async () => {
       fs.writeFile(
         path.join(restoredFolder, entry.path),
         entry.content,
-        "base64url",
+        "base64",
       );
     } else {
       fs.mkdir(path.join(restoredFolder, entry.path), { recursive: true });
