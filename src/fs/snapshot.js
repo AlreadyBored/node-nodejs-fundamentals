@@ -29,16 +29,15 @@ const snapshot = async () => {
 
   const rootPath = path.resolve(TARGET_FOLDER);
 
-  const isFolder =await isFolderExists(rootPath);
+  const isFolder = await isFolderExists(rootPath);
 
   if (!isFolder) {
     throw new Error("FS operation failed");
   }
 
   const context = { rootPath, entries: [] };
-  const startPath = path.resolve("workspace");
 
-  await drillDownFolderExt(startPath, {
+  await drillDownFolderExt(rootPath, {
     runOnFile: async ({ pathTo, metadata, other }) => {
       const contentRaw = await getFileContent(pathTo);
 
