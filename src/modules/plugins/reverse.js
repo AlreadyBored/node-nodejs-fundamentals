@@ -1,3 +1,1 @@
-export const run = () => {
-  return 'dlrow olleh';
-};
+export const run = () => 'olleh morf esrever nigulp';
