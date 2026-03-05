@@ -1,5 +1,6 @@
-import { resolve, join } from 'node:path';
-import { readdir, readFile, lstat } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { readdir, readFile, lstat, writeFile } from 'node:fs/promises';
 
 const snapshot = async () => {
   const getDirEntries = async (path) => {
@@ -14,7 +15,7 @@ const snapshot = async () => {
 
         entryInfo.type = 'file';
         entryInfo.size = stats.size;
-        entryInfo.content = await readFile(fullPath, 'utf-8');
+        entryInfo.content = (await readFile(fullPath)).toString('base64');
         
         return entryInfo;
       }
@@ -33,10 +34,18 @@ const snapshot = async () => {
     }));
   };
 
-  const rootPath = resolve('workspace');
-  const entries = await getDirEntries(rootPath);
+  try {
+    const rootPath = join(fileURLToPath(import.meta.url), '..', '..', '..', 'workspace');
+    const entries = await getDirEntries(rootPath);
 
-  console.log({ rootPath, entries: entries.flat(Infinity) });
+    await writeFile(
+      join(rootPath, '..', 'snapshot.json'),
+      JSON.stringify({ rootPath, entries: entries.flat(Infinity) }, null, 2)
+    );
+  } catch (error) {
+    error.message = `FS operation failed\n${error.message}`;
+    throw error;
+  }
 };
 
 await snapshot();
