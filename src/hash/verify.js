@@ -70,7 +70,7 @@ const verify = async () => {
       status = 'FAIL';
     }
 
-    //console.log(`${filename} — ${status}`);
+    console.log(`${filename} — ${status}`);
   }
 };
 
