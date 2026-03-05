@@ -1,5 +1,25 @@
 import readline from "readline";
 
+/**
+ * Запускает интерактивный интерфейс командной строки
+ * Поддерживает команды: uptime, cwd, date, exit, help
+ * Приглашение ввода: "> "
+ *
+ * @function
+ * @returns {void}
+ *
+ * @example
+ * // Запуск программы
+ * interactive();
+ *
+ * // Взаимодействие:
+ * // > uptime
+ * // Uptime: 12.34s
+ * // > cwd
+ * // Current working directory: /home/user/project
+ * // > exit
+ * // Goodbye!
+ */
 const interactive = () => {
   const commandDescription = {
     uptime: "Show process uptime",
