@@ -1,6 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 
+// need to redo
+
 const merge = async () => {
   const dir = './src/cp';
   const argvs = process.argv.slice(2);
@@ -36,6 +38,7 @@ const merge = async () => {
     for (const file of listFiles) {
       const content = fs.readFileSync(path.join(dir, file.name), 'utf-8');
       process.stdout.write(content + '\n');
+
     }
   } catch (error) {
     console.error('Error:', error);

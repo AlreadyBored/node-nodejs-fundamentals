@@ -1,11 +1,12 @@
 import fs, { constants } from 'node:fs/promises';
+const rootPath = process.cwd() + '/workspace';
   const readableFileContent = {
-    rootPath: process.cwd(),
-    etnries: []
+    rootPath: rootPath,
+    entries: []
   };
 
 const snapshot = async (paths) => {
-  const dir = paths ? paths : process.cwd();
+  const dir = paths ? paths : rootPath;
   isWorksapceExisted(dir);
 
   try {
@@ -16,16 +17,16 @@ const snapshot = async (paths) => {
 
       if (file.isDirectory()) {
         await snapshot(fullPath);
-        readableFileContent.etnries.push({
-          path: dir.split(process.cwd() + '/')[1],
+        readableFileContent.entries.push({
+          path: dir.split(process.cwd() + '/workspace')[1],
           type: 'directory',
         });
       } else {
         await fs.access(fullPath, constants.R_OK);
         const content = (await fs.readFile(fullPath)).toString('base64');
         const size = (await fs.stat(fullPath)).size;
-        readableFileContent.etnries.push({
-          path: dir.split(process.cwd() + '/')[1] + file.name,
+        readableFileContent.entries.push({
+          path: dir.split(process.cwd() + '/workspace')[1] + file.name,
           type: 'file',
           size: size,
           content: content

@@ -15,7 +15,7 @@ let deepestPath = '';
 
 
 const findByExt = async (paths, fileArr) => {
-  const dir = paths ? paths : '.';
+  const dir = paths ? paths : './workspace';
   isWorksapceExisted(dir);
   const fileList = fileArr ? fileArr : [];
 

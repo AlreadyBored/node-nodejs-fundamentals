@@ -5,6 +5,14 @@ const restore = async () => {
   const jsonDir = dir + '/snapshot.json';
   isJSONEXist(jsonDir);
 
+  try {
+    await fs.mkdir(dir + '/workspace_restored');
+  } catch (error) {
+    if (error === 'ENOENT') {
+      console.error('FS operation failed');
+    }
+  } 
+
   try {    
     const data = await fs.readFile('./snapshot.json', 'utf8');
     const content = JSON.parse(data);
@@ -12,7 +20,7 @@ const restore = async () => {
     for (const entry of content.entries) {
       let pathFromJSON = content.rootPath;
 
-      pathFromJSON =  pathFromJSON + '/' + entry.path;
+      pathFromJSON =  pathFromJSON.split('/workspace')[0] +'/workspace_restored/' + entry.path;
 
       if (entry.type === 'directory') {
         await fs.mkdir(pathFromJSON);
