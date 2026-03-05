@@ -10,7 +10,7 @@
   "scripts": {
     "fs:snapshot": "node src/fs/snapshot.js",
     "fs:restore": "node src/fs/restore.js",
-    "fs:findByExt": "node src/fs/findByExt.js --ext js",
+    "fs:findByExt": "node src/fs/findByExt.js --ext txt",
     "fs:merge": "node src/fs/merge.js",
     "cli:interactive": "node src/cli/interactive.js",
     "cli:progress": "node src/cli/progress.js",
