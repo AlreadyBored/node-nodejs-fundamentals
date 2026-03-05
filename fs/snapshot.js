@@ -58,7 +58,7 @@ const scanDirectory = async (currentPath, relativePath = "", entries = []) => {
  * @throws {Error} "FS operation failed" при ошибках файловой системы
  *
  * @example
- * // Запуск: node snapshot.js /path/to/workspace
+ * // Запуск: node snapshot.js "/path/to/workspace"
  * // Создает /path/to/workspace/snapshot.json
  */
 const snapshot = async () => {

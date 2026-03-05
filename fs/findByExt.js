@@ -5,9 +5,9 @@ import path from "path";
  * Получает расширение для поиска из аргументов командной строки
  * @returns {string} Расширение файла (с точкой)
  * @example
- * // --ext txt → возвращает ".txt"
- * // --ext .js → возвращает ".js"
- * // без --ext → возвращает ".txt" (по умолчанию)
+ * // --ext txt возвращает ".txt"
+ * // --ext .js возвращает ".js"
+ * // без --ext возвращает ".txt" (по умолчанию)
  */
 const findExt = () => {
   let ext = ".txt";
@@ -77,13 +77,13 @@ const findFilesByExt = async (currentPath, extension, relativePath = "") => {
  * @throws {Error} "FS operation failed" при ошибках файловой системы
  *
  * @example
- * // Запуск: node findByExt.js /path/to/workspace --ext .txt
+ * // Запуск: node findByExt.js "/path/to/workspace" --ext .txt
  * // Вывод: список всех .txt файлов в директории
  *
- * // Запуск: node findByExt.js /path/to/workspace --ext js
+ * // Запуск: node findByExt.js "/path/to/workspace" --ext js
  * // Вывод: список всех .js файлов (точка добавляется автоматически)
  *
- * // Запуск: node findByExt.js /path/to/workspace
+ * // Запуск: node findByExt.js "/path/to/workspace"
  * // Вывод: список всех .txt файлов (расширение по умолчанию)
  */
 const findByExt = async () => {

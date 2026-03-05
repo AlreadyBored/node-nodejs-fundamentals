@@ -74,10 +74,10 @@ const validateFilesExist = async (partsPath, files) => {
  * @returns {string} Абсолютный путь к рабочей директории
  *
  * @example
- * // node script.js --files file1.txt ./my-workspace
+ * // node script.js --files file1.txt "./my-workspace"
  * // return '/absolute/path/to/my-workspace'
  *
- * // node script.js ./my-workspace --files file1.txt
+ * // node script.js "./my-workspace" --files file1.txt
  * // return '/absolute/path/to/my-workspace'
  *
  * // node script.js (без указания пути)

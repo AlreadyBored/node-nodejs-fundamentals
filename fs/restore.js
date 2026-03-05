@@ -11,7 +11,7 @@ import path from "path";
  * @throws {Error} "FS operation failed" при ошибках файловой системы
  *
  * @example
- * // Запуск: node restore.js /path/to/snapshot.json
+ * // Запуск: node restore.js "/path/to/snapshot.json"
  * // Восстанавливает структуру в ./workspace_restored
  */
 
