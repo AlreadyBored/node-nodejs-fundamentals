@@ -4,7 +4,7 @@ import {
   getFileContent,
   isFolderExists,
   encryptContent,
-  drillDownFolder as drillDownFolderExt,
+  drillDownFolder,
 } from "../lib/utils.js";
 
 const TARGET_FOLDER = "workspace";
@@ -37,7 +37,7 @@ const snapshot = async () => {
 
   const context = { rootPath, entries: [] };
 
-  await drillDownFolderExt(rootPath, {
+  await drillDownFolder(rootPath, {
     runOnFile: async ({ pathTo, metadata, other }) => {
       const contentRaw = await getFileContent(pathTo);
 
