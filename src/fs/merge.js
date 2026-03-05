@@ -21,16 +21,17 @@ function getArgValue(flag) {
   const args = process.argv.slice(2);
   const index = args.indexOf(flag);
 
-  if (index !== -1 && args[index + 1] && !args[index + 1].startsWith('--')) {
+  if (index !== -1 && args[index + 1] && !args[index + 1].startsWith("--")) {
     return args[index + 1];
   }
   return null;
 }
 
 const merge = async () => {
+
   const BASE_PATH = join("./home/user/workspace");
   const PARTS_PATH = join(BASE_PATH, "parts");
-  const argument = getArgValue('--files');
+  const argument = getArgValue("--files");
 
   if (!(await isDirExists(PARTS_PATH))) {
     throw new Error("FS operation failed");
@@ -51,7 +52,7 @@ const merge = async () => {
     });
   } else {
     resultFileList = files
-      .filter((fileName) => fileName.split('.').includes("txt"))
+      .filter((fileName) => fileName.split(".").includes("txt"))
       .sort((a, b) => a.localeCompare(b));
 
     if (resultFileList.length === 0) {
