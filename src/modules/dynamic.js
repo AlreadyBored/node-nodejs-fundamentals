@@ -1,9 +1,15 @@
+import { argv } from "node:process";
+
 const dynamic = async () => {
-  // Write your code here
-  // Accept plugin name as CLI argument
-  // Dynamically import plugin from plugins/ directory
-  // Call run() function and print result
-  // Handle missing plugin case
+  const args = argv.slice(2);
+
+  if (!args.length || args.length === 0) throw new Error("unknown argument");
+
+  const { run } = await import(`./plugins/${args[0]}`).catch(() => {
+    throw new Error("Plugin not found");
+  });
+
+  console.log(run());
 };
 
 await dynamic();
