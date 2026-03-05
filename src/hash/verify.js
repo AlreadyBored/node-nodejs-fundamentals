@@ -41,10 +41,11 @@ const verify = async () => {
   // Read checksums.json
   // Calculate SHA256 hash using Streams API
   // Print result: filename — OK/FAIL
-
-  const checksumsPath = new URL('./checksums.json', import.meta.url);
+  const checksumsPath = new URL('../../checksums.json', import.meta.url);
   const checksumsFilePath = fileURLToPath(checksumsPath);
+  //debugger;
   let checksumsRaw;
+  console.log(`Reading checksums from: ${checksumsFilePath}`);
 
   try {
     checksumsRaw = await readFile(checksumsPath, 'utf8');
