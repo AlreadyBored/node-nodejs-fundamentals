@@ -14,7 +14,7 @@ const merge = async () => {
   const targetFile = path.resolve(currentDir, '../../workspace/merged.txt');
 
   const filesFlagIndex = process.argv.indexOf('--files');
-debugger;
+  //debugger;
 
   try {
     let filenames;
@@ -42,7 +42,7 @@ debugger;
       const filePath = path.join(partsDir, filename);
       chunks.push(await readFile(filePath, 'utf8'));
     }
-debugger;
+    //debugger;
     await writeFile(targetFile, chunks.join(''), 'utf8');
   } catch {
     throw new Error('FS operation failed');
