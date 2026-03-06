@@ -1,12 +1,9 @@
 import { access } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { scanDirectory } from "./scanDirectory.js";
+import { resolve } from "path";
 
 const findByExt = async () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const workspacePath = path.resolve(__dirname, "workspace");
+  const workspacePath = resolve("workspace");
   const args = process.argv.slice(2);
   const extIndex = args.indexOf("--ext");
 

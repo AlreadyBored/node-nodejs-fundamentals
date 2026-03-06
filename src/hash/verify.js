@@ -2,6 +2,7 @@ import { createReadStream } from "fs";
 import { readFile } from "node:fs/promises";
 import { createHash } from "crypto";
 import { fileURLToPath } from "url";
+import { resolve } from "path";
 import { dirname, join } from "path";
 
 const calculateHash = (file) =>
@@ -16,16 +17,14 @@ const calculateHash = (file) =>
 
 const verify = async () => {
   try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const filePath = join(__dirname, "checksums.json");
-
-    const data = await readFile(filePath, "utf8");
+    //checksums.json and test files should be in the root like node-nodejs-fundamentals/checksums.json
+    const projectRoot = process.cwd();
+    const data = await readFile(join(projectRoot, "checksums.json"), "utf8");
     const checksumsContent = JSON.parse(data);
 
     for (const [filename, expectedHash] of Object.entries(checksumsContent)) {
       try {
-        const filePath = join(__dirname, filename);
+        const filePath = join(projectRoot, filename);
         const actualHash = await calculateHash(filePath);
         const result = actualHash === expectedHash ? "OK" : "FAIL";
         console.log(`${filename} — ${result}`);

@@ -1,12 +1,10 @@
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
 import { scanDirectory } from "./scanDirectory.js";
-import { fileURLToPath } from "node:url";
+import { resolve } from "path";
 
 const merge = async () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const workspaceDir = path.resolve(__dirname, "workspace");
+  const workspaceDir = resolve("workspace");
   const partsDir = path.join(workspaceDir, "parts");
   const outputFile = path.join(workspaceDir, "merged.txt");
 

@@ -1,14 +1,12 @@
 import { writeFile, access } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "path";
 import { scanDirectory } from "./scanDirectory.js";
 
 const snapshot = async () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+  //workspace folder should be in the root like node-nodejs-fundamentals/workspace
 
-  const workspaceDir = path.resolve(__dirname, "workspace"); //workspace folder should be inside src/fs
-  const snapshotPath = path.resolve(__dirname, "snapshot.json");
+  const workspaceDir = resolve("workspace");
+  const snapshotPath = resolve("snapshot.json");
 
   try {
     await access(workspaceDir);

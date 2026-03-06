@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "path";
 
 async function createEntries(entries, baseDir) {
   for (const entry of entries) {
@@ -21,10 +21,8 @@ async function createEntries(entries, baseDir) {
 }
 
 async function restore() {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const snapshotPath = path.resolve(__dirname, "snapshot.json");
-  const restoreDir = path.resolve(__dirname, "workspace_restored");
+  const snapshotPath = resolve("snapshot.json");
+  const restoreDir = resolve("workspace_restored");
 
   try {
     await access(snapshotPath);
