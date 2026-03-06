@@ -1,4 +1,4 @@
-import { createReadStream, createWriteStream } from "fs";
+import { createWriteStream } from "fs";
 import { mkdir, access, readdir, readFile } from "node:fs/promises";
 
 import { resolve, join, relative } from "path";
@@ -7,6 +7,7 @@ import { promisify } from "util";
 import { createBrotliCompress } from "zlib";
 
 const pipe = promisify(pipeline);
+export const LENGTH_FIELD_SIZE = 4; //bytes
 
 const getFiles = async (dir) => {
   let files = [];
@@ -49,10 +50,10 @@ const compressDir = async () => {
       const fileBuffer = await readFile(filePath);
       const pathBuffer = Buffer.from(relPath, "utf-8");
 
-      const pathLengthBuffer = Buffer.alloc(4);
+      const pathLengthBuffer = Buffer.alloc(LENGTH_FIELD_SIZE);
       pathLengthBuffer.writeUInt32BE(pathBuffer.length);
 
-      const contentLengthBuffer = Buffer.alloc(4);
+      const contentLengthBuffer = Buffer.alloc(LENGTH_FIELD_SIZE);
       contentLengthBuffer.writeUInt32BE(fileBuffer.length);
 
       brotliStream.write(pathLengthBuffer);
