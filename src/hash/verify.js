@@ -7,7 +7,6 @@ import { dirname, join } from "path";
 const calculateHash = (file) =>
   new Promise((resolve, reject) => {
     const hash = createHash("sha256");
-    // console.log(hash.digest("hex"));
     const stream = createReadStream(file);
 
     stream.on("data", (chunk) => hash.update(chunk));
@@ -28,7 +27,6 @@ const verify = async () => {
       try {
         const filePath = join(__dirname, filename);
         const actualHash = await calculateHash(filePath);
-        console.log(filename, actualHash);
         const result = actualHash === expectedHash ? "OK" : "FAIL";
         console.log(`${filename} — ${result}`);
       } catch {

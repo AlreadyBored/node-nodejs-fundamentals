@@ -1,3 +1,6 @@
+// please use quotes in --color
+// like this way "#fafafa"
+
 const progress = () => {
   const args = process.argv.slice(2);
 
