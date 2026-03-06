@@ -1,4 +1,5 @@
 const filter = () => {
+  
   // Write your code here
   // Read from process.stdin
   // Filter lines by --pattern CLI argument
