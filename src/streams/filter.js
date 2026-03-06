@@ -1,10 +1,10 @@
+import { FilterByArgumentTranform } from './customized/filterTranformStream.js';
+
 const filter = () => {
-  
-  // Write your code here
-  // Read from process.stdin
-  // Filter lines by --pattern CLI argument
-  // Use Transform Stream
-  // Write to process.stdout
+  const filterTransform = new FilterByArgumentTranform();
+  process.stdin
+    .pipe(filterTransform)
+    .pipe(process.stdout);
 };
 
 filter();
