@@ -37,7 +37,7 @@ const dynamic = async () => {
       console.error('Error: ', error)
     }
   } finally {
-    process.stdin.write(result);
+    process.stdout.write(result+'\n');
   }
 };
 
