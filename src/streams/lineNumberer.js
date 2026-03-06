@@ -2,32 +2,40 @@ import { Transform } from "stream";
 import { pipeline } from "stream/promises";
 // IMPORTANT: for Windows users!
 // Change npm command in package.json to "streams:lineNumberer": "node src/streams/lineNumberer.js"
-// Run then the command in terminal: 
+// Run then the command in terminal:
 //
 // echo "hello
 // world" | npm run streams:lineNumberer
 //
 // Otherwise, it doesn't work
 
+const createLineNumbererStream = () => {
+  let lineNumber = 1;
+  let buffer = "";
 
-const transformStream = new Transform({
-  transform(chunk, encoding, callback) {
+  return new Transform({
+    transform(chunk, encoding, callback) {
+      buffer += chunk.toString().replace(/\r/g, "");
 
-    const transformedChunk = chunk
-      .toString()
-      .split("\n")
-      .map((line, index) => `${index + 1}| ${line}`)
-      .join("\n");
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
 
-    callback(null, transformedChunk);
-  },
-});
+      for (const line of lines) {
+        this.push(`${lineNumber++}| ${line}\n`);
+      }
+
+      callback();
+    },
+  });
+};
 
 const lineNumberer = () => {
   // Write your code here
   // Read from process.stdin
   // Use Transform Stream to prepend line numbers
   // Write to process.stdout
+
+  const transformStream = createLineNumbererStream();
 
   pipeline(process.stdin, transformStream, process.stdout);
 };
