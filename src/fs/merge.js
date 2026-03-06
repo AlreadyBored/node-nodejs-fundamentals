@@ -31,7 +31,7 @@ const merge = async () => {
         }).sort();
 
         if (listFiles.length === 0) {
-          console.error('No text file found!');
+          console.error(Error('No text file found!'));
         }
     }
 
@@ -41,7 +41,7 @@ const merge = async () => {
 
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(Error(error));
   }
 };
 

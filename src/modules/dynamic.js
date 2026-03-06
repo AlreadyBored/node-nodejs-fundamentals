@@ -30,9 +30,9 @@ const dynamic = async () => {
     result = module.run();
   } catch (error) {
     if (error === 'ENOENT') {
-      console.error('Error: ', "No such file exist!");
+      console.error(Error("FS operation failed"));
     } else if (error === 'EACCES') {
-      console.error('Error: ', "Access Denied!")
+      console.error(Error("Access Denied!"));
     } else {
       console.error('Error: ', error)
     }

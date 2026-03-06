@@ -7,11 +7,11 @@ export const isFileOrDirectoryExist = async (path) => {
     await fs.access(path, constants.R_OK);
   } catch (error) {
     if (error.code === 'ENOENT') {
-        console.error(errorMsg);
+        console.error(Error(errorMsg));
     } else if (error.code === 'EACCES') {
-      console.error('Error: ', 'Access Denied!');
+      console.error(Error('Access Denied!'));
     }
-    console.error('Error: ', error); 
+    console.error(Error(error)); 
   }
 }
 

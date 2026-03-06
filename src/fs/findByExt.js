@@ -39,7 +39,7 @@ const findByExt = async (paths, fileArr) => {
       }
     }
   } catch (error) {
-    console.error('Error: ', error);
+    console.error(Error(error));
   }
 
   return fileList;
@@ -55,14 +55,14 @@ for (const path of listArr) {
 }
 
 async function isWorksapceExisted(path) {
-  const errorMsg = 'Worspace does not exist!';
+  const errorMsg = 'FS operation failed';
   try {
     fs.accessSync(path);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.error('Error: ', errorMsg);
+      console.error(Error(errorMsg));
     }
-    console.error('Error: ', error); 
+    console.error(Error(error)); 
   }
 }
 

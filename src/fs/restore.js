@@ -9,7 +9,7 @@ const restore = async () => {
     await fs.mkdir(dir + '/workspace_restored');
   } catch (error) {
     if (error === 'ENOENT') {
-      console.error('FS operation failed');
+      console.error(Error('FS operation failed'));
     }
   } 
 
@@ -34,11 +34,11 @@ const restore = async () => {
 
   } catch (error) {
     if (error === 'ENOENT') {
-      console.error('Error: ', "No such file exist!");
+      console.error(Error('FS operation failed'));
     } else if (error === 'EACCES') {
-      console.error('Error: ', "Access Denied!")
+      console.error(Error("Access Denied!"));
     } else {
-      console.error('Error: ', error)
+      console.error(Error(error))
     }
   }
 };
@@ -52,10 +52,10 @@ async function isJSONEXist(path) {
     await fs.access(path, constants.R_OK);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.error('Error: ', errorMsg);
+      console.error(Error(errorMsg));
     } else if (error.code === 'EACCES') {
-      console.error('Error: ', 'Access Denied!');
+      console.error(Error('Access Denied!'));
     }
-    console.error('Error: ', error); 
+    console.error(Error(error)); 
   }
 }
