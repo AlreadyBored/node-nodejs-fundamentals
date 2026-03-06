@@ -4,34 +4,38 @@ import { readdir, readFile, lstat, writeFile } from 'node:fs/promises';
 
 const snapshot = async () => {
   const getDirEntries = async (path) => {
-    const dirEntries = await readdir(path, { withFileTypes: true });
+    const childElements = await readdir(path, { withFileTypes: true });
+    const dirEntries = [];
 
-    return await Promise.all(dirEntries.map(async entry => {
-      const entryInfo = { path: entry.name };
-      const fullPath = join(path, entryInfo.path);
+    for (const element of childElements) {
+      const entry = { path: element.name };
+      const fullPath = join(path, entry.path);
 
-      if (entry.isFile()) {
+      if (element.isFile()) {
         const stats = await lstat(fullPath);
 
-        entryInfo.type = 'file';
-        entryInfo.size = stats.size;
-        entryInfo.content = (await readFile(fullPath)).toString('base64');
+        entry.type = 'file';
+        entry.size = stats.size;
+        entry.content = (await readFile(fullPath)).toString('base64');
         
-        return entryInfo;
+        dirEntries.push(entry);
+        continue;
       }
 
-      entryInfo.type = 'directory';
+      entry.type = 'directory';
 
       const subDirEntries = await getDirEntries(fullPath);
 
-      return [
-        entryInfo,
+      dirEntries.push([
+        entry,
         subDirEntries.flatMap(element => ({
           ...element,
-          path: join(entryInfo.path, element.path),
+          path: join(entry.path, element.path),
         })),
-        ];
-    }));
+      ]);
+    }
+
+    return dirEntries;
   };
 
   try {
