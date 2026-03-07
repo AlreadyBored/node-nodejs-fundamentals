@@ -1,7 +1,7 @@
 import process from 'process'
 import path from 'path';
 import fs from "fs/promises"
-import { stat } from 'fs';
+import { access, stat } from 'fs';
 
 const findByExt = async () => {
   // Write your code here
@@ -11,14 +11,20 @@ const findByExt = async () => {
     throw "Some of the arguments missing"
   }
 
-//check workspace existance, sort file names alphabetically
-
   var workspace = path.join(process.cwd(), 'workspace')
+
+  try{
+    await fs.access(workspace)
+  }catch{
+    throw " FS operation failed"
+  }
+
   var extension = '.txt'
   var filesExpected = []
 
   const extValue = process.argv.indexOf('--ext') + 1
-  extension = "." + process.argv[extValue] //consider the possibility that extValue will contain a dot
+  
+  extension = "." + process.argv[extValue]
 
   const iterate = async currentDir => {
     for (let i of await fs.readdir(currentDir)){
@@ -31,10 +37,15 @@ const findByExt = async () => {
         await iterate(entryPath)
       }
     }
+
+    filesExpected.sort()
   }
 
   await iterate(workspace)
-  console.log(filesExpected)
+
+  for (let l of filesExpected){
+    console.log(l)
+  }
 };
 
 await findByExt();
