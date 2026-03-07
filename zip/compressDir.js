@@ -1,6 +1,7 @@
 import { createReadStream, createWriteStream } from "fs";
 import fs from "fs/promises";
 import path from "path";
+import { PassThrough } from "stream";
 import { pipeline } from "stream/promises";
 import { createBrotliCompress } from "zlib";
 
@@ -72,34 +73,37 @@ const getAllFiles = async (dir, baseDir = dir, fileList = []) => {
 };
 
 /**
- * Функция для записи информации о файле в архив
+ • Записывает метаданные файла в поток архива.
+ • Структура: [4 байта: длина пути][N байт: путь][8 байт: размер файла]
  */
 async function writeFileHeaderToArchive(archiveStream, relativePath, fileSize) {
-  return new Promise((resolve, reject) => {
-    const pathBuffer = Buffer.from(relativePath, "utf8");
-    const pathLengthBuffer = Buffer.alloc(4);
-    pathLengthBuffer.writeUInt32LE(pathBuffer.length);
+  const pathBuffer = Buffer.from(relativePath, "utf8");
+  const PATH_LEN_BYTES = 4;
+  const FILE_SIZE_BYTES = 8;
 
-    const sizeBuffer = Buffer.alloc(8);
-    sizeBuffer.writeBigUInt64LE(BigInt(fileSize));
+  const OFFSET = {
+    PATH_LENGTH: 0,
+    PATH: PATH_LEN_BYTES,
+    FILE_SIZE: PATH_LEN_BYTES + pathBuffer.length,
+  };
 
-    archiveStream.write(pathLengthBuffer, (err) => {
-      if (err) return reject(err);
-      archiveStream.write(pathBuffer, (err) => {
-        if (err) return reject(err);
-        archiveStream.write(sizeBuffer, (err) => {
-          if (err) return reject(err);
-          resolve();
-        });
-      });
-    });
-  });
+  const totalHeaderSize = PATH_LEN_BYTES + pathBuffer.length + FILE_SIZE_BYTES;
+  const headerBuffer = Buffer.alloc(totalHeaderSize);
+
+  headerBuffer.writeUInt32LE(pathBuffer.length, OFFSET.PATH_LENGTH);
+
+  pathBuffer.copy(headerBuffer, OFFSET.PATH);
+
+  headerBuffer.writeBigUInt64LE(BigInt(fileSize), OFFSET.FILE_SIZE);
+
+  if (!archiveStream.write(headerBuffer)) {
+    await new Promise((resolve) => archiveStream.once("drain", resolve));
+  }
 }
 
 /**
  * Функция для архивации файлов из папки toCompress из указанной директории
  * Если директория не указана скприт будет автоматически искать ее в текущей рабочей директории
- * Есть проблема утечки памяти которую я не решила, увеличивать количество потоков в ручную не захотелось
  */
 const compressDir = async () => {
   const workspacePath = getWorkspacePath();
@@ -108,7 +112,7 @@ const compressDir = async () => {
   const ARCHIVE_NAME = "archive.br";
   const ARCHIVE_PATH = path.join(TARGET_DIR, ARCHIVE_NAME);
 
-  //не понятно что там со статусом fs.exists так что будет такая проверка
+  // Статус fs.exists мне непонятен, поэтому будет такая проверка
   try {
     await checkAccess(SOURCE_DIR);
     console.log(`Source directory exists: ${SOURCE_DIR}`);
@@ -120,28 +124,39 @@ const compressDir = async () => {
     await fs.mkdir(TARGET_DIR, { recursive: true });
 
     const archiveStream = createWriteStream(ARCHIVE_PATH);
+    const brotli = createBrotliCompress();
+
+    const packStream = new PassThrough();
+
+    const compressionPromise = pipeline(packStream, brotli, archiveStream);
 
     const filesInfo = await getAllFiles(SOURCE_DIR);
+
     for (const fileInfo of filesInfo) {
       await writeFileHeaderToArchive(
-        archiveStream,
+        packStream,
         fileInfo.relativePath,
         fileInfo.size,
       );
-      const brotli = createBrotliCompress();
+
       const readStream = createReadStream(fileInfo.fullPath);
-      try {
-        await pipeline(readStream, brotli, archiveStream, { end: false });
-        console.log(`✅ ${fileInfo.name}`);
-      } finally {
-        readStream.destroy();
-        brotli.destroy();
+
+      for await (const chunk of readStream) {
+        if (!packStream.write(chunk)) {
+          await new Promise((resolve) => packStream.once("drain", resolve));
+        }
       }
+
+      console.log(`✅ ${fileInfo.name}`);
     }
 
-    console.log(`🎉 Все файлы обработаны!`);
-    archiveStream.end();
+    packStream.end();
+
+    await compressionPromise;
+
+    console.log("Все файлы обработаны и архив создан!");
   } catch (error) {
+    console.error(error);
     throw new Error("FS operation failed");
   }
 };

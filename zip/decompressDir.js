@@ -67,7 +67,7 @@ function readHeader(buffer) {
 }
 
 /**
- * Функция распаковки архива, пока не работает
+ * Функция распаковки архива, распаковывает если архив сжат правильно
  *
  */
 const decompressDir = async () => {
@@ -77,71 +77,60 @@ const decompressDir = async () => {
   const DECOMPRESSED_DIR = path.join(workspacePath, "decompressed");
   const ARCHIVE_PATH = path.join(COMPRESSED_DIR, ARCHIVE_NAME);
 
-  console.log(`\n📂 Проверка доступа...`);
   await checkAccess(COMPRESSED_DIR);
   await checkAccess(ARCHIVE_PATH);
 
-  console.log(`📖 Чтение архива: ${ARCHIVE_PATH}`);
-
-  // Сначала РАСПАКОВЫВАЕМ весь архив
   const readStream = createReadStream(ARCHIVE_PATH);
   const brotliDecompress = createBrotliDecompress();
   const passThrough = new PassThrough();
 
-  // Собираем распакованные данные в буфер
   const chunks = [];
   passThrough.on("data", (chunk) => chunks.push(chunk));
 
-  // Запускаем распаковку
   await pipeline(readStream, brotliDecompress, passThrough);
 
-  // Объединяем все распакованные данные
   const decompressedBuffer = Buffer.concat(chunks);
-
-  console.log(`📦 Распаковано ${decompressedBuffer.length} байт данных\n`);
 
   await fs.mkdir(DECOMPRESSED_DIR, { recursive: true });
 
   let buffer = decompressedBuffer;
   let fileCount = 0;
 
-  console.log(`📦 Распаковка файлов из архива:\n`);
-
   while (buffer.length > 0) {
     const header = readHeader(buffer);
 
     if (!header) {
       console.log(
-        `❌ Ошибка чтения заголовка на позиции ${decompressedBuffer.length - buffer.length}`,
+        `Ошибка чтения заголовка на позиции ${decompressedBuffer.length - buffer.length}`,
       );
       break;
     }
 
-    console.log(`  Найден файл: ${header.path}`);
-    console.log(`    Размер данных: ${header.size} байт`);
+    console.log(`File found: ${header.path}`);
+    console.log(`File size: ${header.size} bites`);
 
     if (buffer.length < header.headerSize + header.size) {
-      console.log(`    ❌ Недостаточно данных для файла`);
+      console.log(`Not enougth data for a file`);
       break;
     }
 
-    // Извлекаем данные файла
     const fileData = buffer.slice(
       header.headerSize,
       header.headerSize + header.size,
     );
 
-    // Убираем обработанные данные из буфера
     buffer = buffer.slice(header.headerSize + header.size);
 
     fileCount++;
     const fullPath = path.join(DECOMPRESSED_DIR, header.path);
     await fs.mkdir(path.dirname(fullPath), { recursive: true });
     await fs.writeFile(fullPath, fileData);
-    console.log(`    ✅ Сохранен (${fileData.length} байт)\n`);
+    console.log(`    ✅ Saved (${fileData.length} bites)\n`);
   }
 
-  console.log(`\n✨ Готово! Распаковано файлов: ${fileCount}`);
+  console.log(
+    `\n Done! We've unzipped ${fileCount} files. Time to go get some coffee!`,
+  );
 };
 
 await decompressDir();
