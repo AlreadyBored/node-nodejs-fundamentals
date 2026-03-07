@@ -1,5 +1,5 @@
 {
-  "name": "node-nodejs-fundamentals",
+  "name": "nodejs-fundamentals",
   "version": "1.0.0",
   "description": "Node.js Fundamentals assignment repository",
   "engines": {
@@ -34,5 +34,10 @@
     "assignments"
   ],
   "author": "alreadybored",
-  "license": "ISC"
+  "license": "ISC",
+  "main": "index.js",
+  "bugs": {
+    "url": "https://github.com/AlreadyBored/node-nodejs-fundamentals/issues"
+  },
+  "homepage": "https://github.com/AlreadyBored/node-nodejs-fundamentals#readme"
 }
