@@ -29,11 +29,6 @@ const ARGUMENT_MAP = {
 
 /**
  * Проверяет, является ли строка валидным HEX в формате #RRGGBB
- * @param {string} color - Строка для проверки
- * @returns {boolean} true если HEX в верном формате, иначе false
- *
- * @example
- * isHexValid('#FF0000') // true
  */
 const isHexValid = (hex) => {
   if (typeof hex !== "string") return false;
@@ -52,12 +47,10 @@ const colorProgressBar = (str, hex) => {
 
 /**
  * Проверяет, является ли значение неотрицательным числом
- * @param {string} value - Проверяемое значение
- * @returns {number|null} Число или null
  */
 const isNumberValid = (value) => {
   const num = parseInt(value, 10);
-  return !isNaN(num) && num >= 0 && num < Infinity ? num : null;
+  return !isNaN(num) && num >= 0 ? num : null;
 };
 
 /**
@@ -85,6 +78,7 @@ const getArgs = () => {
   }
   return result;
 };
+
 /**
  * Функция показывает кастомный прогресс-бар в консоли по заданным параметра
  *

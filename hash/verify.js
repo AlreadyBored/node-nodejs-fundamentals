@@ -15,9 +15,6 @@ import path from "path";
  *
  * // node script.js (без указания пути)
  * // return process.cwd()
- *
- * // node script.js --some-flag ./my-workspace
- * // return '/absolute/path/to/my-workspace' (флаг игнорируется)
  */
 const getWorkspacePath = () => {
   let workspacePath = process.cwd();
@@ -35,15 +32,6 @@ const getWorkspacePath = () => {
 /**
  * Проверяет доступ к файлу по указанному пути
  * Логирует детали ошибки, но выбрасывает стандартное сообщение
- * @async
- * @param {string} path - Путь к файлу для проверки
- * @throws {Error} "FS operation failed" при любой ошибке доступа
- * @returns {Promise<void>}
- *
- * @example
- * // Проверка существующего файла
- * await checkFileAccess('./workspace/file.txt');
- * // (тихо проходит, если файл доступен)
  */
 const checkFileAccess = async (path) => {
   try {
@@ -105,21 +93,8 @@ const calculateFileHash = (filePath) => {
 /**
  * Функция верификации файлов по их контрольным суммам
  * Читает файл checksums.json из указанной директории, если не указана то из рабочей директории,
+ * Файлы тоже ищет в указанной директории, если какого-то файла нет, логгирует в консоль
  * Вычисляет SHA256 хеши для каждого указанного файла и сравнивает с ожидаемыми значениями
- * @async
- * @throws {Error} "FS operation failed" при критических ошибках:
- * - Отсутствует или недоступен файл checksums.json
- * - Невалидный JSON в checksums.json
- * - Ошибки доступа к проверяемым файлам
- * @returns {Promise<void>}
- *
- * @example
- * // Запуск с указанием рабочей директории
- * // node verify.js "./workspace"
- * // Пример вывода:
- * // file1.txt — OK
- * // file2.txt — FAIL
- * // Files not found: file3.jpg
  */
 const verify = async () => {
   const workspacePath = getWorkspacePath();

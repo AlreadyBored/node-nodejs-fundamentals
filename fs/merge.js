@@ -3,8 +3,7 @@ import path from "path";
 
 /**
  * Парсит аргументы командной строки для получения списка файлов после флага --files
- * @returns {string[]} Массив имен файлов, переданных через --files
- *
+ * Возвращает массив имен файлов
  * @example
  * // node script.js --files file1.txt,file2.txt
  * // return ['file1.txt', 'file2.txt']
@@ -24,11 +23,6 @@ const parseFilesOrder = () => {
 
 /**
  * Проверяет существование файлов и их расширение в указанной директории
- * @param {string} partsPath - Путь к директории parts
- * @param {string[]} files - Массив имен файлов для проверки
- * @returns {Promise<boolean>} true если все файлы существуют и имеют расширение .txt
- * @throws {Error} Детализированная ошибка с перечнем отсутствующих файлов или файлов с неверным расширением
- *
  * @example
  * // Проверяет файлы file1.txt и file2.txt в папке "C:\Users\test\parts"
  * await validateFilesExist("C:\Users\test\parts", ['file1.txt', 'file2.txt'])
@@ -71,7 +65,6 @@ const validateFilesExist = async (partsPath, files) => {
  * Определяет путь к рабочей директории из аргументов командной строки
  * По умолчанию это текущая рабочая директория (process.cwd())
  * Игнорирует флаги (начинающиеся с --) и значения после --files
- * @returns {string} Абсолютный путь к рабочей директории
  *
  * @example
  * // node script.js --files file1.txt "./my-workspace"
@@ -93,6 +86,12 @@ const getWorkspacePath = () => {
   return workspacePath;
 };
 
+/**
+ * Функция "склеивания" файлов из определенной директории
+ * Если переда порядок файлов, то склеивает в этом порядке
+ * Если не передан то склеивает в порядке обычной сортировки
+ * Порядок должен передаваться одной строкой после --files
+ */
 const merge = async () => {
   let workspacePath = getWorkspacePath();
 

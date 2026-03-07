@@ -25,13 +25,7 @@ const findExt = () => {
 };
 
 /**
- * Рекурсивно ищет файлы с указанным расширением в директории
- * @param {string} currentPath - Путь к текущей директории для поиска
- * @param {string} extension - Расширение файла (с точкой)
- * @param {string} relativePath - Относительный путь от корня (для формирования результата)
- * @returns {Promise<string[]>} Массив найденных файлов с относительными путями
- * @throws {Error} Если возникла ошибка при чтении директории
- *
+ * Рекурсивно ищет файлы с указанным расширением в переданной директории
  * @example
  * // Поиск всех .txt файлов в ./workspace
  * const files = await findFilesByExt('./workspace', '.txt');
@@ -69,14 +63,8 @@ const findFilesByExt = async (currentPath, extension, relativePath = "") => {
  * Основная функция для поиска файлов по расширению
  * Принимает путь к директории из аргументов командной строки
  * Выводит отсортированный список найденных файлов с указанным расширением
- * @async
- * @throws {Error} Если путь не указан или не существует
- * @throws {Error} Если путь указывает на файл, а не директорию
- * @throws {Error} "FS operation failed" при ошибках файловой системы
- *
  * @example
- * // Запуск: node findByExt.js "/path/to/workspace" --ext js
- * // Вывод: список всех .js файлов (точка добавляется автоматически)
+ * node findByExt.js "/path/to/workspace" --ext js
  */
 const findByExt = async () => {
   let rawWorkspacePath = process.argv[2]?.replace(/^"|"$/g, "");
