@@ -24,7 +24,7 @@ const findByExt = async () => {
     })
 
     const relativePaths = filteredFiles.map((file) => path
-      .relative(process.cwd(), path.join(file.parentPath, file.name)))
+      .relative(workspacePath, path.join(file.parentPath, file.name)))
       .sort((a, b) => {
         return a.localeCompare(b);
       });

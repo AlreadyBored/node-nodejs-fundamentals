@@ -20,7 +20,7 @@ const split = async () => {
   let filesCounter = 1;
 
   const writeLines = (lines) => {
-    const writeStream = createWriteStream(join(process.cwd(), `chunk-${filesCounter++}.txt`));
+    const writeStream = createWriteStream(join(process.cwd(), `chunk_${filesCounter++}.txt`));
     writeStream.write(lines.join('\n'));
     writeStream.end();
   }

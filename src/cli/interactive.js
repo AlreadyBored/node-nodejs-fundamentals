@@ -12,7 +12,7 @@ const interactive = () => {
   rl.on('line', (line) => {
     switch(line) {
       case 'uptime': 
-        console.log('Uptime:',process.uptime().toFixed(2));
+        console.log(`Uptime: ${process.uptime().toFixed(2)}s`);
         break;
       case 'cwd':
         console.log(process.cwd());

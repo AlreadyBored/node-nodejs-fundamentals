@@ -1,19 +1,17 @@
 import fs from 'fs/promises'
 import path from 'path'
 
-const getBaseName = (name) => path.basename(name, path.extname(name));
-
 const parseTextFiles = (files, filesToRead) => {
   const textFiles = files.filter(
     (file) => file.isFile() && path.extname(file.name) === '.txt',
   );
 
   if (filesToRead.length > 0) {  
-    const byBase = new Map(
-      textFiles.map((f) => [getBaseName(f.name), f]),
+    const byName = new Map(
+      textFiles.map((f) => [f.name, f]),
     );
 
-    return filesToRead.map((base) => byBase.get(base));
+    return filesToRead.map((name) => byName.get(name));
   }
 
   return textFiles.sort((a, b) => a.name.localeCompare(b.name));
