@@ -7,7 +7,6 @@ import path from "path";
  * Определяет путь к рабочей директории из аргументов командной строки
  * По умолчанию это текущая рабочая директория (process.cwd())
  * Игнорирует флаги (начинающиеся с --)
- * @returns {string} Абсолютный путь к рабочей директории
  *
  * @example
  * // node script.js ./my-workspace
@@ -49,9 +48,6 @@ const checkFileAccess = async (path) => {
 };
 /**
  * Проверяет существование файлов в указанной директории
- * @param {string} dirPath - Путь к директории с файлами
- * @param {string[]} files - Массив имен файлов для проверки
- * @returns {Promise<string[]>} Массив только существующих файлов
  */
 const getExistingFiles = async (dirPath, files) => {
   const existenceChecks = await Promise.all(
@@ -76,8 +72,6 @@ const getExistingFiles = async (dirPath, files) => {
 
 /**
  * Вычисляет SHA256 хеш файла
- * @param {string} filePath - Путь к файлу
- * @returns {Promise<string>} Хеш в hex формате
  */
 const calculateFileHash = (filePath) => {
   return new Promise((resolve, reject) => {

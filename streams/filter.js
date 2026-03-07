@@ -2,7 +2,6 @@ import { Transform } from "stream";
 
 /**
  * Получает паттерн для фильтрации из аргументов командной строки
- * @returns {string} Паттерн для фильтрацииа
  */
 const getPattern = () => {
   let pattern = "";

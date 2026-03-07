@@ -3,11 +3,6 @@ import path from "path";
 
 /**
  * Рекурсивно сканирует директорию и собирает информацию о всех файлах и папках
- * @param {string} currentPath - Абсолютный путь к текущей директории для сканирования
- * @param {string} relativePath - Относительный путь от корневой директории (по умолчанию "")
- * @param {Array} entries - Массив для накопления результатов (используется при рекурсии)
- * @returns {Promise<Array>} Массив объектов с информацией о файлах и папках
- *
  * @example
  * // Возвращает массив вида:
  * [
@@ -52,11 +47,6 @@ const scanDirectory = async (currentPath, relativePath = "", entries = []) => {
 /**
  * Создает snapshot указанной директории со всем содержимым
  * Сканирует директорию рекурсивно и сохраняет структуру в snapshot.json
- * @async
- * @throws {Error} Если путь не указан или не существует
- * @throws {Error} Если путь указывает на файл, а не директорию
- * @throws {Error} "FS operation failed" при ошибках файловой системы
- *
  * @example
  * // Запуск: node snapshot.js "/path/to/workspace"
  * // Создает /path/to/workspace/snapshot.json
