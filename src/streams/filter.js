@@ -1,9 +1,35 @@
+import { pipeline, Transform } from "stream";
+
 const filter = () => {
-  // Write your code here
-  // Read from process.stdin
-  // Filter lines by --pattern CLI argument
-  // Use Transform Stream
-  // Write to process.stdout
+  const patternIndex = process.argv.indexOf('--pattern');
+  let filterWord = null;
+
+  if (patternIndex !== -1) {
+    filterWord = process.argv[patternIndex + 1];
+  }
+
+  const transfrom = new Transform({
+    transform: (chunk, _, cb) => {
+      const lines = chunk.toString().split('\n');
+
+      let res;
+
+      if (filterWord) {
+        res = lines.filter((line) => line.includes(filterWord)).join('\n');
+      } else {
+        res = lines.join('\n');
+      }
+
+      cb(null, `${res}\n`);
+    }
+  })
+
+  pipeline(
+    process.stdin,
+    transfrom,
+    process.stdout,
+    () => {}
+  )
 };
 
 filter();
