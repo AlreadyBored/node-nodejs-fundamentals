@@ -3,7 +3,10 @@ import fs from 'fs';
 import path from 'path';
 
 const snapshot = async () => {
-  const startDirectory = process.cwd()
+  const startDirectory = path.join(process.cwd(), 'workspace')
+  if (!fs.existsSync(startDirectory) || !fs.statSync(startDirectory).isDirectory()){
+        throw "FS operation failed"
+      }
 
   var metadata = {
     "rootPath": startDirectory,
@@ -15,12 +18,9 @@ const snapshot = async () => {
 
     for(let f=0; f < directoryContent.length; f++){
       const entryPath = path.join(dir, directoryContent[f])
-      if (!fs.existsSync(entryPath)){
-        throw "FS operation failed"
-      }
-
       const stats = fs.statSync(entryPath)
       let entry = {}
+      
       entry.path = path.relative(startDirectory, entryPath)
       if (!stats.isDirectory()){
         entry.type = "file"
