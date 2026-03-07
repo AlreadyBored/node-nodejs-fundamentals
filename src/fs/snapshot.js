@@ -25,7 +25,7 @@ const snapshot = async () => {
       if (!stats.isDirectory()){
         entry.type = "file"
         entry.size = stats.size
-        entry.content = fs.readFileSync(entryPath, 'utf8')
+        entry.content = fs.readFileSync(entryPath, 'base64')
       } else {
         entry.type = "directory"
         iterate(entryPath)
