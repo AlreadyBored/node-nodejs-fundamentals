@@ -1,10 +1,7 @@
-import { createWriteStream } from "node:fs";
-import { readdir, readFile, mkdir, access } from "node:fs/promises";
-import { createBrotliCompress } from "node:zlib";
+import { readdir, readFile, writeFile, mkdir, access } from "node:fs/promises";
+import { brotliCompressSync } from "node:zlib";
 import { join, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { pipeline } from "node:stream/promises";
-import { Readable } from "node:stream";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,24 +11,23 @@ const compressDir = async () => {
   const toCompressPath = join(workspacePath, "toCompress");
   const compressedPath = join(workspacePath, "compressed");
 
-  try {
-    await access(toCompressPath);
-  } catch {
-    throw new Error("FS operation failed");
-  }
+  const exists = await access(toCompressPath)
+    .then(() => true)
+    .catch(() => false);
+  if (!exists) throw new Error("FS operation failed");
 
   const entries = [];
 
   const walk = async (dir) => {
-    const dirEntries = await readdir(dir, { withFileTypes: true });
-    for (const entry of dirEntries) {
-      const fullPath = join(dir, entry.name);
+    const items = await readdir(dir, { withFileTypes: true });
+    for (const item of items) {
+      const fullPath = join(dir, item.name);
       const relPath = relative(toCompressPath, fullPath);
 
-      if (entry.isDirectory()) {
+      if (item.isDirectory()) {
         entries.push({ path: relPath, type: "directory" });
         await walk(fullPath);
-      } else if (entry.isFile()) {
+      } else {
         const content = await readFile(fullPath);
         entries.push({
           path: relPath,
@@ -44,15 +40,9 @@ const compressDir = async () => {
 
   await walk(toCompressPath);
 
-  const manifest = JSON.stringify({ entries });
-
+  const compressed = brotliCompressSync(JSON.stringify({ entries }));
   await mkdir(compressedPath, { recursive: true });
-
-  await pipeline(
-    Readable.from([manifest]),
-    createBrotliCompress(),
-    createWriteStream(join(compressedPath, "archive.br")),
-  );
+  await writeFile(join(compressedPath, "archive.br"), compressed);
 };
 
 await compressDir();
