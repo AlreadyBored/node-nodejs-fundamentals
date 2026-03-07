@@ -12,7 +12,7 @@ const rootPath=process.cwd();
       const fullPath=path.join(pathDirectory, file);
       const stat=fs.statSync(fullPath);
       if(stat.isFile()){
-        const content=fs.readFileSync(fullPath,{encoding:"utf-8"});
+        const content=fs.readFileSync(fullPath,{encoding:"base64"});
          entries.push({
         path:path.relative(rootPath, fullPath),
         type:'file',
@@ -32,7 +32,7 @@ const rootPath=process.cwd();
     rootPath,
     entries
   }
-  fs.writeFileSync("./src/fs/data.json",JSON.stringify(data, "",2))
+  fs.writeFileSync("./src/fs/snapshot.json",JSON.stringify(data, "",2))
 };
 
 await snapshot();
