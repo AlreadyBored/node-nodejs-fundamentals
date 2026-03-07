@@ -11,16 +11,18 @@ const restore = async () => {
     throw new Error("FS operation failed");
   }
 
-  try {
-    await fs.stat(restoredAbsPath);
-    throw new Error("FS operation failed");
-  } catch {
-    /* not exists -> ok */
-  }
+  let restoredExists = false;
 
   try {
-    await fs.mkdir(restoredAbsPath);
-  } catch {
+    await fs.stat(restoredAbsPath);
+    restoredExists = true;
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      throw new Error("FS operation failed");
+    }
+  }
+
+  if (restoredExists) {
     throw new Error("FS operation failed");
   }
 
@@ -47,21 +49,22 @@ const restore = async () => {
   }
 
   try {
-    for (const entry of entries) {
-      if (entry.type === "directory") {
-        const targetDirAbsPath = path.join(restoredAbsPath, entry.path);
-        await fs.mkdir(targetDirAbsPath, { recursive: true });
-      } else if (entry.type === "file") {
-        const targetFileAbsPath = path.join(restoredAbsPath, entry.path);
-        const parentDirAbsPath = path.dirname(targetFileAbsPath);
-        await fs.mkdir(parentDirAbsPath, { recursive: true });
+    await fs.mkdir(restoredAbsPath);
 
+    for (const entry of entries) {
+      const targetPath = path.join(restoredAbsPath, entry.path);
+
+      if (entry.type === "directory") {
+        await fs.mkdir(targetPath, { recursive: true });
+      } else if (entry.type === "file") {
         if (typeof entry.content !== "string") {
-          throw new Error("FS operation failed");
+          throw new Error();
         }
-        await fs.writeFile(targetFileAbsPath, entry.content, "base64");
+
+        await fs.mkdir(path.dirname(targetPath), { recursive: true });
+        await fs.writeFile(targetPath, entry.content, "base64");
       } else {
-        throw new Error("FS operation failed");
+        throw new Error();
       }
     }
   } catch {
