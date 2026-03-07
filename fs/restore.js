@@ -62,7 +62,7 @@ const restore = async () => {
     console.log(`Restore completed successfully!`);
   } catch (error) {
     if (error?.code === "ENOENT") {
-      console.error("Path does not exist:", rowSnapshotPath);
+      console.error("Path does not exist:", rawSnapshotPath);
     }
     throw new Error(`FS operation failed: ${error?.message || ""}`);
   }

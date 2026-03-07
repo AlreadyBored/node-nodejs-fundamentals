@@ -57,7 +57,8 @@ const snapshot = async () => {
   if (!rawWorkspacePath) {
     throw new Error("Workspace path is required");
   }
-  const workspacePath = path.resolve(rawWorkspacePath);
+  const workspacePath = p;
+  ath.resolve(rawWorkspacePath);
 
   try {
     await fs.access(workspacePath);

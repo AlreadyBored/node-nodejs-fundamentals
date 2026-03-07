@@ -2,8 +2,15 @@ import { Transform } from "stream";
 
 /**
  * По заданию функция нумерует строки вводимые из коммандной строки
- * Добавила обработку чисел отдельно от основного задания,
  * Если ввести строку в которой есть \n, это воспримется как перенос строки
+ * Проверила варианты ниже Powershell и Git Bash. OS Win 11
+ * @example
+ * // Git Bash — интерактивный режим
+ * $ node lineNumberer.js
+ * (ввод строк вручную, Ctrl+C для выхода)
+ *
+ * // PowerShell
+ * echo "Hello`nWorld" | node lineNumberer.js
  */
 const lineNumberer = () => {
   let lineNumber = 1;

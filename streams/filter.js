@@ -19,23 +19,36 @@ const getPattern = () => {
  */
 const filter = () => {
   const pattern = getPattern();
-
-  if (!pattern) {
-    console.error("Pattern is required");
-    process.exit(1);
-  }
+  let buffer = "";
 
   const transformer = new Transform({
-    transform(chunk, encoding, callback) {
-      const lines = chunk.toString().split("\n");
-      const filtered = lines.filter((line) => line.includes(pattern));
+    transform(chunk, _, callback) {
+      buffer += chunk.toString();
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
 
-      const result = filtered.join("\n") + (filtered.length > 0 ? "\n" : "");
+      for (const line of lines) {
+        if (line.includes(pattern)) {
+          this.push(line + "\n");
+        }
+      }
+      callback();
+    },
 
-      callback(null, result);
+    flush(callback) {
+      if (buffer && buffer.includes(pattern)) {
+        this.push(buffer + "\n");
+      }
+      callback();
     },
   });
+
   process.stdin.pipe(transformer).pipe(process.stdout);
+
+  process.stdin.on("error", (err) => {
+    console.error("Input error:", err.message);
+    process.exit(1);
+  });
 };
 
 filter();
