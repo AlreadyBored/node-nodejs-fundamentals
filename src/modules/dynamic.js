@@ -1,12 +1,20 @@
 const dynamic = async () => {
-  const plugin = process.argv[2];
-  const pluginPath = `./plugins/${plugin}.js`;
+  const pluginName = process.argv[2];
+  if (!pluginName) {
+    console.log("Plugin not found");
+    process.exit(1);
+  }
+
   try {
-    const pluginModule = await import(pluginPath);
-    const result = pluginModule.run();
-    console.log(result);
-  } catch (error) {
-    console.log('Plugin not found');
+    const pluginModule = await import(`./plugins/${pluginName}.js`);
+
+    if (typeof pluginModule.run !== "function") {
+      throw new Error("Invalid plugin");
+    }
+
+    console.log(pluginModule.run());
+  } catch {
+    console.log("Plugin not found");
     process.exit(1);
   }
 };
