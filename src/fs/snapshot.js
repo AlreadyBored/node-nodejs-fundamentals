@@ -5,8 +5,8 @@ import path from 'path';
 const snapshot = async () => {
   const startDirectory = path.join(process.cwd(), 'workspace')
   if (!fs.existsSync(startDirectory) || !fs.statSync(startDirectory).isDirectory()){
-        throw "FS operation failed"
-      }
+    throw "FS operation failed"
+  }
 
   var metadata = {
     "rootPath": startDirectory,
