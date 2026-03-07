@@ -28,7 +28,7 @@ const snapshot = async () => {
 
       dirEntries.push([
         entry,
-        subDirEntries.flatMap(element => ({
+        subDirEntries.map(element => ({
           ...element,
           path: join(entry.path, element.path),
         })),
