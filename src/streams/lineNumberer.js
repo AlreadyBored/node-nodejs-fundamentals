@@ -1,8 +1,29 @@
+import { Transform } from 'stream';
+
 const lineNumberer = () => {
-  // Write your code here
-  // Read from process.stdin
-  // Use Transform Stream to prepend line numbers
-  // Write to process.stdout
+  let leftover = '';
+  let lineNumber = 1;
+
+  const numberer = new Transform({
+    transform(chunk, encoding, callback) {
+      const data = leftover + chunk.toString();
+      const lines = data.split('\n');
+      leftover = lines.pop(); 
+      for (const line of lines) {
+        this.push(`${lineNumber} | ${line}\n`);
+        lineNumber++;
+      }
+      callback();
+    },
+    flush(callback) {
+      if (leftover) {
+        this.push(`${lineNumber} | ${leftover}\n`);
+      }
+      callback();
+    }
+  });
+
+  process.stdin.pipe(numberer).pipe(process.stdout);
 };
 
 lineNumberer();
