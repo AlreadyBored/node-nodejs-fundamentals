@@ -9,8 +9,8 @@ const dynamic = async () => {
   try{
     const plugin = await import(`../modules/plugins/${pluginArg}.js`)
     console.log(plugin.run())
-  }catch (err){
-    console.error(err)
+  }catch{
+    console.error('Plugin not found')
     process.exit(1)
   }
 
