@@ -1,9 +1,8 @@
-import { parentPort } from 'worker_threads';
+import { parentPort, workerData } from 'node:worker_threads';
 
-// Receive array from main thread
-// Sort in ascending order
-// Send back to main thread
+const sortChunk = (arr) => {
+  return [...arr].sort((a, b) => a - b);
+};
 
-parentPort.on('message', (data) => {
-  // Write your code here
-});
+const sorted = sortChunk(workerData.chunk);
+parentPort.postMessage(sorted);

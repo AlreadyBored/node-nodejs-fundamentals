@@ -1,4 +1,4 @@
-# Node.js Fundamentals
+# Node.js Fundamentals by Vladimir Tugutov (https://github.com/vladimirtugutov)
 
 ## Description
 
@@ -61,6 +61,33 @@ Snapshot format reminder:
 
 - `npm run cli:interactive` - Interactive command-line interface
 - `npm run cli:progress` - Display progress bar
+
+To run with color use:
+
+#### With color - IMPORTANT: use quotes or escaping!
+node src/cli/progress.js --color "#00ff00"    # Green
+node src/cli/progress.js --color '#0000ff'    # Blue  
+node src/cli/progress.js --color "#ff0000"    # Red
+node src/cli/progress.js --color "#ffff00"    # Yellow
+
+#### Full customization
+node src/cli/progress.js \
+  --duration 3000 \
+  --interval 50 \
+  --length 50 \
+  --color "#00ff00"
+
+#### Windows CMD (quotes not required)
+node src\cli\progress.js --color #00ff00
+
+#### npm Scripts:
+npm run cli:progress -- --color "#00ff00"
+
+#### DOESN'T WORK: #00ff00 becomes a comment
+node src/cli/progress.js --color #00ff00
+
+#### WORKS: quotes protect from shell
+node src/cli/progress.js --color "#00ff00"
 
 ### Modules (src/modules)
 
