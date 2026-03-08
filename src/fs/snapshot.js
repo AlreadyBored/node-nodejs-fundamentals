@@ -1,17 +1,14 @@
 import { readdir, stat, readFile, writeFile, access } from "fs/promises";
 import { join, relative, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-import { ERROR_TEXT } from '../consts/consts.js'
+import { ERROR_TEXT, WORKSPACE_DIR_NAME, SNAPSHOT_FILE_NAME, ENCODING_STANDARD } from '../consts/consts.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const WORKSPACE_NAME = "workspace";
-const FILE_NAME = "snapshot.json";
-const ENCODING_STANDARD = "base64";
 
 const snapshot = async () => {
-  const workspacePath = resolve(__dirname, `../../${WORKSPACE_NAME}`);
+  const workspacePath = resolve(__dirname, `../../${WORKSPACE_DIR_NAME}`);
 
   try {
     await access(workspacePath);
@@ -59,7 +56,7 @@ const snapshot = async () => {
   }
 
   const snapshotData = { rootPath: workspacePath.replaceAll("\\", "/"), entries };
-  const outputPath = join(dirname(workspacePath), FILE_NAME);
+  const outputPath = join(dirname(workspacePath), SNAPSHOT_FILE_NAME);
 
   try {
     await writeFile(outputPath, JSON.stringify(snapshotData, null, 2), "utf8");
