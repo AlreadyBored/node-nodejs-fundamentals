@@ -6,8 +6,6 @@ import { ERROR_TEXT, WORKSPACE_DIR_NAME } from '../consts/consts.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const WORKSPACE_NAME = "workspace";
-
 const findByExt = async () => {
   const args = process.argv.slice(2);
   const extIndex = args.indexOf("--ext");
