@@ -36,6 +36,7 @@
   "author": "alreadybored",
   "license": "ISC",
   "dependencies": {
-    "redline": "^1.0.1"
+    "redline": "^1.0.1",
+    "tar-stream": "^3.1.8"
   }
 }
