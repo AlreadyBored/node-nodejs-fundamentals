@@ -44,7 +44,7 @@ const snapshot = async () => {
         entries.push({ path: relativePath, type: "directory" });
       } else if (itemStat.isFile()) {
         const buf = await readFile(absolutePath);
-        const content = buf.toString(ENCODING);
+        const content = buf.toString(ENCODING_STANDARD);
 
         entries.push({
           path: relativePath,
