@@ -1,9 +1,19 @@
+import { access } from "fs";
+import path from "path";
+import { pathToFileURL } from "url";
+import { parseArgs } from "util";
+
 const dynamic = async () => {
-  // Write your code here
-  // Accept plugin name as CLI argument
-  // Dynamically import plugin from plugins/ directory
-  // Call run() function and print result
-  // Handle missing plugin case
+  const pluginArg = process.argv[2]
+  
+  try{
+    const plugin = await import(`../modules/plugins/${pluginArg}.js`)
+    console.log(plugin.run())
+  }catch (err){
+    console.error(err)
+    process.exit(1)
+  }
+
 };
 
 await dynamic();
