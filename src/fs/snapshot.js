@@ -16,7 +16,7 @@ const snapshot = async () => {
   const iterate = dir => {
     const directoryContent = fs.readdirSync(dir)
 
-    for(let f=0; f < directoryContent.length; f++){
+    for(let f of directoryContent){
       const entryPath = path.join(dir, directoryContent[f])
       const stats = fs.statSync(entryPath)
       let entry = {}

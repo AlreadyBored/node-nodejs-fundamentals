@@ -30,13 +30,11 @@ const restore = async () => {
     try{
       await fs.access(recreatedDirPath)
       throw 'This folder already exists'
-    }
-    catch (err){
+    }catch (err){
       if (err.message === 'This folder already exists') throw err;
     }
     await recreateFileStructure()
-  }
-  catch{
+  }catch{
     throw "FS operation failed"
   }
 };

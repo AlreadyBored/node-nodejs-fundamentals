@@ -1,17 +1,6 @@
-import { parse } from 'path';
-import { parseArgs } from 'util'; //use it in previous tasks
+import { parseArgs } from 'util';
 
 const progress = () => {
-  // Write your code here
-  // Simulate progress bar from 0% to 100% over ~5 seconds
-  // Update in place using \r every 100ms
-  // Format: [████████████████████          ] 67%
-  
-  //  *1. math
-  //  *2. render
-  //  *3. input
-  //4. logic (all the fancy stuff)
-
   const outputCfg = {
     options:{
       duration: {type: 'string', default: '5000'},
