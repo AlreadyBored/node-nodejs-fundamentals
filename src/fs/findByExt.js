@@ -1,10 +1,7 @@
-import { join, dirname, relative, extname, sep } from "node:path";
+import { join, relative, extname, sep } from "node:path";
 import { readdir } from "node:fs/promises";
 
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = import.meta.dirname;
 
 function getArgValue(flag) {
   const args = process.argv.slice(2);

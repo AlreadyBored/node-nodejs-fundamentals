@@ -1,13 +1,12 @@
 import { createReadStream } from "node:fs";
 import { writeFile, mkdir, rm } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { argv } from "node:process";
 import { Transform, Writable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { fileURLToPath } from "node:url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = import.meta.dirname;
+
 
 function getArgValue(flag) {
   const args = argv.slice(2);
