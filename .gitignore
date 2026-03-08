@@ -6,5 +6,4 @@ npm-debug.log*
 workspace/
 workspace_restored/
 snapshot.json
-data.json
 chunk_*.txt
