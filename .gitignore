@@ -7,5 +7,4 @@ workspace/
 workspace_restored/
 snapshot.json
 data.json
-source.txt
 chunk_*.txt
