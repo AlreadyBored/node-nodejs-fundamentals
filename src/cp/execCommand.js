@@ -1,10 +1,28 @@
+import { stdout, stderr, argv, env, exit } from "node:process";
+import { spawn } from "node:child_process";
+
 const execCommand = () => {
-  // Write your code here
-  // Take command from CLI argument
-  // Spawn child process
-  // Pipe child stdout/stderr to parent stdout/stderr
-  // Pass environment variables
-  // Exit with same code as child
+  const commandLine = argv.slice(2)[0];
+
+  const spawnProcess = spawn(commandLine, {
+    shell: true,
+    env: {
+      ...env,
+      MY_ENV: "childEnv",
+    },
+  });
+
+  spawnProcess.stdout.pipe(stdout);
+  spawnProcess.stderr.pipe(stderr);
+
+  spawnProcess.on("exit", (code) => {
+    exit(code);
+  });
+
+  spawnProcess.on("error", (err) => {
+    console.error(`stderr: ${err}`);
+    exit(1);
+  });
 };
 
 execCommand();
