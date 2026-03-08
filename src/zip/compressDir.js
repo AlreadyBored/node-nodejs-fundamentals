@@ -16,27 +16,26 @@ const compress = async () => {
     await fs.access(finalToPath, constants.F_OK);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.log('a')
       await fs.mkdir(finalToPath, { recursive: true });
     }
   }
-
+  
 
   try {
     const files = await getFilesRecursively(sourcePath);
 
     async function* iterativeWriteinArchive() {
       for await (const file of files) {
-         const relativePath = relative(sourcePath, file);
-         const fileStat = await fs.stat(file);
+        const relativePath = relative(sourcePath, file);
+        const fileStat = await fs.stat(file);
 
-         const header = Buffer.from(`${relativePath.length}:${relativePath}:${fileStat.size}:`);
-         yield header;
+        const header = Buffer.from(`${relativePath.length}:${relativePath}:${fileStat.size}:`);
+        yield header;
 
-         const readStream = createReadStream(file);
-                for await (const chunk of readStream) {
-                    yield chunk;
-                }
+        const readStream = createReadStream(file);
+        for await (const chunk of readStream) {
+          yield chunk;
+        }
       }
     }
 
