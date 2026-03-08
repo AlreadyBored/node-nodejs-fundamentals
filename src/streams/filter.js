@@ -1,14 +1,14 @@
 import { Transform } from 'node:stream';
 
 const filter = () => {
-  const { stdin, stdout, argv } = process;
+  const { stdin, stdout, argv, exit } = process;
 
   const args = argv.slice(2);
   const patternArgIndex = args.indexOf('--pattern');
 
   if (patternArgIndex === -1 || (patternArgIndex + 1) >= args.length) {
     console.log('No pattern specified. Restart with pattern.');
-    process.exit(1);
+    exit(1);
   }
   
   const filterStream = new Transform({
