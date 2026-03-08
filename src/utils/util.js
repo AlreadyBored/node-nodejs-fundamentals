@@ -1,4 +1,5 @@
 import fs, { constants } from 'node:fs/promises';
+import { join } from 'path';
 
 export const isFileOrDirectoryExist = async (path) => {
   const errorMsg = 'FS operation failed';
@@ -68,4 +69,15 @@ export const validateValueType = (argsKeyValueForm) => {
     if (!regHex.test(argsKeyValueForm.color)) {
         argsKeyValueForm.color = '#FFFFFF';
     }
+}
+
+export async function getFilesRecursively(fullPath) {
+    const files = await fs.readdir(fullPath, { withFileTypes: true });
+    const promisedFiles = files.map(async (el) => {
+      const fullPth = join(fullPath, el.name);
+      return el.isDirectory() ? (await getFilesRecursively(fullPth)) : fullPth;
+    });
+
+    const mappedFiles = await Promise.all(promisedFiles);
+    return mappedFiles.flat();
 }
