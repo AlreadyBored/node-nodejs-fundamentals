@@ -40,7 +40,6 @@ const merge = async () => {
   }
   
   await fs.writeFile(mergedFilePath, mergedContent);
-
 };
 
 await merge();

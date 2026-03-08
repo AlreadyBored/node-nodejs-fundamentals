@@ -48,6 +48,6 @@ const snapshot = async () => {
   } catch {
     throw new Error('FS operation failed'); 
     }
-  };
+};
 
 await snapshot();

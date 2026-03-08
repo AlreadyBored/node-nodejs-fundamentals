@@ -31,7 +31,6 @@ const verify = async () => {
     const actualHash = hash.digest('hex');
     console.log(`${filename} — ${actualHash === expectedHash ? 'OK' : 'FAIL'}`);
   }
-
 };
 
 await verify();

@@ -31,6 +31,6 @@ const lineNumberer = () => {
   });
 
   process.stdin.pipe(lineNumberer).pipe(process.stdout);
-}
+};
 
 lineNumberer();
