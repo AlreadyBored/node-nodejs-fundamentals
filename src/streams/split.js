@@ -20,7 +20,7 @@ const split = async () => {
   }
 
   if (!Number.isInteger(chunkLineLimit) || chunkLineLimit <= 0) {
-    console.log('Invalid line count. Must be a positive integer.');
+    console.error('Invalid line count. Must be a positive integer.');
     exit(1);
   }
 

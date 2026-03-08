@@ -7,7 +7,7 @@ const filter = () => {
   const patternArgIndex = args.indexOf('--pattern');
 
   if (patternArgIndex === -1 || (patternArgIndex + 1) >= args.length) {
-    console.log('No pattern specified. Restart with pattern.');
+    console.error('No pattern specified. Restart with pattern.');
     exit(1);
   }
   
