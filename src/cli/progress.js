@@ -1,8 +1,21 @@
 const progress = () => {
-  // Write your code here
-  // Simulate progress bar from 0% to 100% over ~5 seconds
-  // Update in place using \r every 100ms
-  // Format: [████████████████████          ] 67%
+  let percent = 0;
+  const total = 50; // длина прогресс-бара
+  const intervalTime = 5000 / 100;
+
+  const interval = setInterval(() => {
+    percent += 1;
+
+    const filler = Math.round((percent / 100) * total);
+    const bar = "█".repeat(filler) + " ".repeat(total - filler);
+
+    process.stdout.write(`\r[${bar}] ${percent}%`);
+
+    if (percent >= 100) {
+      clearInterval(interval);
+      process.stdout.write("\nThat's it!\n");
+    }
+  }, intervalTime);
 };
 
 progress();
