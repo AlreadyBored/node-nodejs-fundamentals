@@ -25,8 +25,7 @@ const progress = () => {
   if (values.color) {
     values.color = moderatedArgv[moderatedArgv.indexOf('--color') + 1];
   }
-  
-  console.log(values.color)
+
   validateValueType(values);
 
   const fullWidth = parseInt(values.length);

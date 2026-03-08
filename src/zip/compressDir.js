@@ -1,26 +1,11 @@
-import { isFileOrDirectoryExist } from "../utils/util.js";
-import fs from 'node:fs/promises';
+import { createReadStream, createWriteStream, existsSync, mkdirSync } from 'fs';
+import { readdir, stat } from 'fs/promises';
+import { join, relative } from 'path';
+import { pipeline } from 'stream/promises';
+import zlib from 'zlib';
+import { Readable } from 'stream';
 
-const compressDir = async () => {
-  const targetPath = './workspace/toCompress/';
-  isFileOrDirectoryExist('./workspace');
-  isFileOrDirectoryExist(targetPath);
+const compress = async () => {
+}
 
-  try {
-    const files = await fs.readdir(targetPath);
-
-    for (const file of files) {
-
-    }
-
-  } catch (error) {
-    
-  }
-  // Write your code here
-  // Read all files from workspace/toCompress/
-  // Compress entire directory structure into archive.br
-  // Save to workspace/compressed/
-  // Use Streams API
-};
-
-await compressDir();
+await compress();
