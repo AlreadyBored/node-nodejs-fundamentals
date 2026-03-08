@@ -10,9 +10,8 @@ const interval = parseInt(getArg('interval') ?? '100');
 const length = parseInt(getArg('length') ?? '30');
 
 const printBar = (percent) => {
-    const total = 30;
-    const filled = Math.floor(total * percent / 100);
-    const empty = total - filled;
+    const filled = Math.floor(length * percent / 100);
+    const empty = length - filled;
     const bar = '█'.repeat(filled) + '░'.repeat(empty);
     process.stdout.write(`\r[${bar}] ${percent}%`);
 };
