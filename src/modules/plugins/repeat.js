@@ -1,3 +1,4 @@
 export const run = () => {
-  return 'hello hello hello';
+  const arg = process.argv[3] || 'hello world';
+  return arg.repeat(3);
 };

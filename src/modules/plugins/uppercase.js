@@ -1,3 +1,4 @@
 export const run = () => {
-  return 'HELLO WORLD';
+  const arg = process.argv[3] || 'hello world';
+  return arg.toUpperCase();
 };
