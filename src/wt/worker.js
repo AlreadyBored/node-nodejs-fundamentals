@@ -1,9 +1,8 @@
 import { parentPort } from 'worker_threads';
 
-// Receive array from main thread
-// Sort in ascending order
-// Send back to main thread
-
-parentPort.on('message', (data) => {
-  // Write your code here
+parentPort.on('message', (numbers) => {
+  if (Array.isArray(numbers)) {
+    numbers.sort((a, b) => a - b);
+    parentPort.postMessage(numbers);
+  }
 });
