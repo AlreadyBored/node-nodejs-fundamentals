@@ -6,7 +6,7 @@ const verify = async () => {
   let checksums;
 
   try {
-    const data = await readFile("checksums.json", "utf8");
+    const data = await readFile("./src/hash/checksums.json", "utf8");
     checksums = JSON.parse(data);
   } catch {
     throw new Error("FS operation failed");
