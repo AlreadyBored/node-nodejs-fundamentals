@@ -28,7 +28,7 @@ const findByExt = async () => {
 
   const args = process.argv.slice(2);
   const extArgIndex = args.indexOf('--ext');
-  const ext = (extArgIndex === -1) ? DEFAULT_EXT : args[extArgIndex + 1];
+  const ext = (extArgIndex !== -1 && (extArgIndex + 1) < args.length) ? args[extArgIndex + 1] : DEFAULT_EXT;
 
   const rootPath = join(fileURLToPath(import.meta.url), '..', '..', '..', 'workspace');
 
