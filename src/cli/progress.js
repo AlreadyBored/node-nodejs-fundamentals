@@ -1,5 +1,16 @@
+const args = process.argv.slice(2);
+
+const getArg = (name) => {
+    const idx = args.indexOf(`--${name}`);
+    return idx !== -1 ? args[idx + 1] : undefined;
+};
+
+const duration = parseInt(getArg('duration') ?? '5000');
+const interval = parseInt(getArg('interval') ?? '100');
+const length = parseInt(getArg('length') ?? '30');
+
 const printBar = (percent) => {
-    const total = 20;
+    const total = 30;
     const filled = Math.floor(total * percent / 100);
     const empty = total - filled;
     const bar = '█'.repeat(filled) + '░'.repeat(empty);
@@ -7,14 +18,17 @@ const printBar = (percent) => {
 };
 
 const progress = () => {
-    let percent = 0;
-    let fiveSecondsLimitThreshold = 2;
-    const interval = setInterval(() => {
+    const steps = Math.floor(duration / interval);
+    const stepPercent = 100 / steps;
+    let elapsed = 0;
+
+    const intervalId = setInterval(() => {
+        elapsed++;
+        const percent = Math.min(Math.round(elapsed * stepPercent), 100);
         printBar(percent);
-        percent += fiveSecondsLimitThreshold;
-        if (percent > 100) {
-            clearInterval(interval);
-            process.stdout.write('\n');
+        if (percent >= 100) {
+            clearInterval(intervalId);
+            process.stdout.write('\nDone!\n');
         }
     }, 100);
 };
