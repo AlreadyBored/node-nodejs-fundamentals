@@ -34,5 +34,8 @@
     "assignments"
   ],
   "author": "alreadybored",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "redline": "^1.0.1"
+  }
 }
