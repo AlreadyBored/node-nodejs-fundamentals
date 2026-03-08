@@ -7,6 +7,11 @@ const parseArgs = () => {
   for (let i = 0; i < args.length; i += 2) {
     const key = args[i];
     const value = args[i + 1];
+    if (!value && key === '--color') {
+      stdout.write(
+        'Hint: use quotes or escaping for color, e.g. --color "#00ff00". If you use npm run script add "-- -- color ..."\n'
+      );
+    }
     if (!value) continue;
 
     switch (key) {
