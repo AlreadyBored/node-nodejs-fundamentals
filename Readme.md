@@ -1,4 +1,4 @@
-# Node.js Fundamentals
+# Node.js Fundamentals by Vladimir Tugutov (https://github.com/vladimirtugutov)
 
 ## Description
 
