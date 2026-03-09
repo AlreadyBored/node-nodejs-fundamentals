@@ -11,14 +11,14 @@ const findByExt = async () => {
   const rootDir = process.cwd();
   const matchedFiles = [];
 
-  const scan = async (currentDir) => {
+  const scanDirectory = async (currentDir) => {
     const entries = await readdir(currentDir, { withFileTypes: true });
 
     for (const entry of entries) {
       const entryPath = path.join(currentDir, entry.name);
 
       if (entry.isDirectory()) {
-        await scan(entryPath);
+        await scanDirectory(entryPath);
       } else if (entry.isFile() && path.extname(entry.name).toLowerCase() === extension.toLowerCase()) {
         matchedFiles.push(path.relative(rootDir, entryPath).split(path.sep).join('/'));
       }
@@ -26,7 +26,7 @@ const findByExt = async () => {
   };
 
   try {
-    await scan(rootDir);
+    await scanDirectory(rootDir);
     matchedFiles.sort((a, b) => a.localeCompare(b));
     matchedFiles.forEach((filePath) => {
       console.log(filePath);

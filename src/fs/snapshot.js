@@ -16,7 +16,7 @@ const snapshot = async () => {
 
   const toSnapshotPath = (absolutePath) => path.relative(workspaceRoot, absolutePath).split(path.sep).join('/');
 
-  const walk = async (directory) => {
+  const scanDirectory = async (directory) => {
     const items = await readdir(directory, { withFileTypes: true });
     items.sort((firstItem, secondItem) => firstItem.name.localeCompare(secondItem.name));
 
@@ -29,7 +29,7 @@ const snapshot = async () => {
           path: relativePath,
           type: 'directory',
         });
-        await walk(itemPath);
+        await scanDirectory(itemPath);
       } else if (item.isFile()) {
         const fileStats = await stat(itemPath);
         const content = await readFile(itemPath);
@@ -45,7 +45,7 @@ const snapshot = async () => {
   };
 
   try {
-    await walk(workspaceRoot);
+    await scanDirectory(workspaceRoot);
     const snapshotData = {
       rootPath: workspaceRoot,
       entries,
