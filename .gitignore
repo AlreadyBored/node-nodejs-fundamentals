@@ -6,7 +6,7 @@ npm-debug.log*
 workspace/
 workspace_restored/
 snapshot.json
-data.json
+# data.json
 checksums.json
 source.txt
 chunk_*.txt
