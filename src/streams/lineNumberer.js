@@ -1,4 +1,4 @@
-import { StartLineWithNumberTranform } from './customized/transformStream.js';
+import { StartLineWithNumberTranform } from './customized/numberTransformStream.js';
 
 const lineNumberer = () => {
   const customLine = new StartLineWithNumberTranform();
