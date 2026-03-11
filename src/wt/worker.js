@@ -5,5 +5,11 @@ import { parentPort } from 'worker_threads';
 // Send back to main thread
 
 parentPort.on('message', (data) => {
-  // Write your code here
+  if (!Array.isArray(data)) {
+    parentPort.postMessage([]);
+    return;
+  }
+
+  const sortedData = [...data].sort((left, right) => left - right);
+  parentPort.postMessage(sortedData);
 });
